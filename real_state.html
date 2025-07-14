@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Prime Estates – Luxury Real Estate</title>
+  <link
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+    rel="stylesheet"
+  />
+  <style>
+    /* Global */
+    body { font-family: 'Segoe UI', sans-serif; scroll-behavior: smooth; }
+    .animate-on-scroll {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity .6s ease-out, transform .6s ease-out;
+    }
+    .animate-on-scroll.visible {
+      opacity: 1;
+      transform: none;
+    }
+
+    /* Navbar */
+    .navbar {
+      transition: background-color 0.3s ease-in-out;
+    }
+    .navbar.scrolled {
+      background-color: rgba(255, 255, 255, 0.95) !important;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    .navbar-brand {
+      font-size: 1.8rem;
+      color: #007bff;
+    }
+    .nav-link {
+      color: #343a40 !important;
+      font-weight: 500;
+      margin-left: 15px;
+    }
+    .nav-link:hover {
+      color: #007bff !important;
+    }
+
+    /* Hero */
+    #hero { position: relative; height: 100vh; overflow: hidden; }
+    .hero-img {
+      height: 100vh;
+      object-fit: cover;
+      width: 100%;
+    }
+    #hero .overlay {
+      position: absolute; top:0; left:0; right:0; bottom:0;
+      background: rgba(0,0,0,.5);
+      z-index: 1;
+    }
+    #hero .carousel-caption {
+      bottom: 40%;
+      z-index: 2;
+      animation: fadeIn 1s ease-out both;
+    }
+    #hero h1 {
+      font-size: 3.5rem; font-weight: 700;
+      animation: fadeInDown 1s ease-out both;
+    }
+    #hero p {
+      font-size: 1.3rem;
+      animation: fadeInUp 1.2s ease-out both;
+    }
+    @keyframes fadeInDown {
+      from { opacity:0; transform: translateY(-30px); }
+      to { opacity:1; transform: none; }
+    }
+    @keyframes fadeInUp {
+      from { opacity:0; transform: translateY(30px); }
+      to { opacity:1; transform: none; }
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    /* Property Types (formerly Features) */
+    .property-type-card {
+      border: none;
+      overflow: hidden;
+      transition: transform .3s ease, box-shadow .3s ease;
+      background-color: #ffffff;
+      border-radius: .5rem;
+    }
+    .property-type-card:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 12px 25px rgba(0,0,0,0.2);
+    }
+    .property-type-card img {
+      object-fit: cover;
+      height: 220px;
+      width: 100%;
+      border-top-left-radius: .5rem;
+      border-top-right-radius: .5rem;
+      transition: transform .5s ease;
+    }
+    .property-type-card:hover img {
+      transform: scale(1.05);
+    }
+    .property-type-card .card-body {
+      padding: 1.5rem;
+    }
+    .property-type-card .card-title {
+      font-size: 1.6rem;
+      font-weight: 600;
+      color: #007bff;
+    }
+    .property-type-card .card-text {
+      color: #555;
+    }
+
+    /* Properties Gallery */
+    .property-wrapper {
+      position: relative;
+      background-color: #fff;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+      border-radius: .75rem;
+      overflow: hidden;
+      transition: transform .3s ease, box-shadow .3s ease;
+    }
+    .property-wrapper:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+    }
+    .property-img {
+      width: 100%;
+      object-fit: cover;
+      height: 350px;
+      transition: transform .5s ease;
+    }
+    .property-wrapper:hover .property-img {
+      transform: scale(1.05);
+    }
+    .property-wrapper .info-overlay {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: rgba(0,0,0,0.6);
+      color: #fff;
+      padding: 1rem;
+      transform: translateY(100%);
+      transition: transform 0.3s ease-in-out;
+    }
+    .property-wrapper:hover .info-overlay {
+      transform: translateY(0);
+    }
+    .property-wrapper .info-overlay h5 {
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+    .property-wrapper .info-overlay p {
+      margin-bottom: 0;
+      font-size: 0.95rem;
+    }
+
+
+    /* Agents */
+    .agent-card {
+      border: none;
+      text-align: center;
+      background-color: #fff;
+      padding: 2rem;
+      border-radius: .75rem;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+      transition: transform .3s ease, box-shadow .3s ease;
+    }
+    .agent-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+    }
+    .agent-card img {
+      width: 160px;
+      height: 160px;
+      object-fit: cover;
+      margin-bottom: 1.5rem;
+      border: 5px solid #007bff;
+      transition: transform .3s ease, border-color .3s ease;
+    }
+    .agent-card:hover img {
+      transform: scale(1.05);
+      border-color: #0056b3;
+    }
+    .agent-card h5 {
+      font-size: 1.75rem;
+      font-weight: 600;
+      color: #343a40;
+      margin-bottom: 0.5rem;
+    }
+    .agent-card p.text-muted {
+      font-size: 1.1rem;
+      margin-bottom: 1rem;
+    }
+    .agent-card a {
+      color: #007bff;
+      text-decoration: none;
+      font-weight: 500;
+    }
+    .agent-card a:hover {
+      text-decoration: underline;
+    }
+
+
+    /* CTA */
+    #cta {
+      background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('https://images.unsplash.com/photo-1560518883-ff51f7b76435?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D') center/cover no-repeat;
+      color: #fff; text-align: center; padding: 8rem 1rem;
+      position: relative; overflow: hidden;
+      border-radius: 1rem;
+      margin: 3rem auto;
+      max-width: 90%;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    }
+    #cta .content { position: relative; z-index: 1; }
+    #cta h2 {
+      font-size: 3rem;
+      font-weight: 700;
+      margin-bottom: 1.5rem;
+    }
+    #cta p {
+      font-size: 1.5rem;
+      margin-bottom: 2.5rem;
+    }
+    #cta .btn-warning {
+      background-color: #ffc107;
+      border-color: #ffc107;
+      color: #343a40;
+      font-size: 1.3rem;
+      padding: 0.8rem 2.5rem;
+      border-radius: 50px;
+      transition: all 0.3s ease;
+    }
+    #cta .btn-warning:hover {
+      background-color: #e0a800;
+      border-color: #e0a800;
+      transform: translateY(-3px);
+      box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    }
+
+    /* Footer */
+    footer {
+      background: #212529; /* Darker footer for contrast */
+      color: #dee2e6;
+      padding: 3rem 1rem;
+      font-size: 0.95rem;
+    }
+    footer a {
+      color: #dee2e6;
+      text-decoration: none;
+      transition: color 0.3s ease;
+    }
+    footer a:hover {
+      color: #007bff;
+    }
+    footer .container p {
+      margin-bottom: 0.5rem;
+    }
+    footer .container p:last-child {
+      margin-bottom: 0;
+    }
+
+  </style>
+</head>
+<body>
+
+  <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm fixed-top">
+    <div class="container">
+      <a class="navbar-brand fw-bold" href="#">Prime Estates</a>
+      <button
+        class="navbar-toggler"
+        type="button"
+        data-bs-toggle="collapse"
+        data-bs-target="#navMenu"
+        aria-controls="navMenu"
+        aria-expanded="false"
+        aria-label="Toggle navigation"
+      >
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navMenu">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item"><a class="nav-link" href="#property-types">Property Types</a></li>
+          <li class="nav-item"><a class="nav-link" href="#properties">Properties</a></li>
+          <li class="nav-item"><a class="nav-link" href="#agents">Agents</a></li>
+          <li class="nav-item"><a class="nav-link" href="#cta">Contact</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <section id="hero" class="carousel slide" data-bs-ride="carousel">
+    <div class="carousel-inner">
+      <div class="carousel-item active">
+        <img class="hero-img" src="https://wallpapersok.com/images/high/bradbury-estates-mansion-n805zhj4h7xz11qs.webp" alt="Luxurious Modern Villa">
+        <div class="overlay"></div>
+        <div class="carousel-caption text-start text-white">
+          <h1>Your Dream Home Awaits</h1>
+          <p>Discover luxury properties in Egypt’s most desirable locations.</p>
+          <a href="#property-types" class="btn btn-primary btn-lg">Explore Property Types</a>
+        </div>
+      </div>
+      <div class="carousel-item">
+        <img class="hero-img" src="https://wallpapersok.com/images/high/real-estate-modern-house-95ju6o11ap2vad6n.webp" alt="Exclusive Villas & Apartments">
+        <div class="overlay"></div>
+        <div class="carousel-caption text-start text-white">
+          <h1>Exclusive Villas & Apartments</h1>
+          <p>Handpicked listings with breathtaking views.</p>
+          <a href="#properties" class="btn btn-primary btn-lg">View Listings</a>
+        </div>
+      </div>
+      <div class="carousel-item">
+        <img class="hero-img" src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Spacious Downtown Penthouse">
+        <div class="overlay"></div>
+        <div class="carousel-caption text-start text-white">
+          <h1>Prime Locations, Unmatched Luxury</h1>
+          <p>Find your perfect space in the heart of the city.</p>
+          <a href="#properties" class="btn btn-primary btn-lg">Browse All Properties</a>
+        </div>
+      </div>
+    </div>
+    <button class="carousel-control-prev" type="button" data-bs-target="#hero" data-bs-slide="prev">
+      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Previous</span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#hero" data-bs-slide="next">
+      <span class="carousel-control-next-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Next</span> 
+    </button>
+  </section>
+
+  <section id="property-types" class="py-5 bg-light">
+    <div class="container">
+      <div class="text-center mb-5 animate-on-scroll">
+        <h2 class="fw-bold display-4 text-primary">Explore Our Property Portfolio</h2>
+        <p class="text-muted lead">Discover the diverse range of luxury real estate we offer.</p>
+      </div>
+      <div class="row g-4">
+        <div class="col-md-4 animate-on-scroll">
+          <div class="card property-type-card">
+            <img src="https://wallpapersok.com/images/high/large-greenwich-ct-mansion-with-pool-wf77yq60q8ysyhol.webp" alt="Luxury Villas">
+            <div class="card-body">
+              <h5 class="card-title">Luxury Villas</h5>
+              <p class="card-text">Spacious designs, private pools, and lush gardens in exclusive communities.</p>
+              <a href="#properties" class="btn btn-outline-primary btn-sm">View Villas</a>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4 animate-on-scroll">
+          <div class="card property-type-card">
+            <img src="https://wallpapersok.com/images/high/modern-mansion-with-big-pool-zofyjqxf0qw3ip7l-2.webp" alt="Modern Apartments">
+            <div class="card-body">
+              <h5 class="card-title">Modern Apartments</h5>
+              <p class="card-text">Contemporary living with stunning city or sea views and premium amenities.</p>
+              <a href="#properties" class="btn btn-outline-primary btn-sm">View Apartments</a>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4 animate-on-scroll">
+          <div class="card property-type-card">
+            <img src="https://wallpapersok.com/images/high/china-real-estate-rise-buildings-h1wl8xo0vz7yjvyv.webp" alt="Commercial Properties">
+            <div class="card-body">
+              <h5 class="card-title">Commercial Properties</h5>
+              <p class="card-text">Prime office spaces, retail units, and investment opportunities in key areas.</p>
+              <a href="#properties" class="btn btn-outline-primary btn-sm">View Commercial</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="properties" class="py-5">
+    <div class="container">
+      <div class="text-center mb-5 animate-on-scroll">
+        <h2 class="fw-bold display-4 text-primary">Featured Listings</h2>
+        <p class="text-muted lead">Handpicked properties waiting for you.</p>
+      </div>
+      <div class="row g-4">
+        <div class="col-md-6 col-lg-4 animate-on-scroll">
+          <div class="property-wrapper">
+            <img class="property-img" src="https://wallpapersok.com/images/high/real-estate-modern-house-95ju6o11ap2vad6n.webp" alt="Luxury Beachfront Villa">
+            <div class="info-overlay">
+              <h5 class="mb-1">Luxury Beachfront Villa</h5>
+              <p class="mb-0">5 beds • 4 baths • $2,500,000</p>
+              <small>New Cairo, Egypt</small>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6 col-lg-4 animate-on-scroll">
+          <div class="property-wrapper">
+            <img class="property-img" src="https://wallpapersok.com/images/high/modern-real-estate-buildings-aav0chf7p2uhgxsl.webp" alt="Spacious Downtown Apartment">
+            <div class="info-overlay">
+              <h5 class="mb-1">Spacious Downtown Apartment</h5>
+              <p class="mb-0">3 beds • 2 baths • $850,000</p>
+              <small>Zamalek, Cairo</small>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6 col-lg-4 animate-on-scroll">
+          <div class="property-wrapper">
+            <img class="property-img" src="https://wallpapersok.com/images/high/modern-cozy-home-garage-autumn-yhdxtarsj79gt4ej.webp" alt="Modern Family Home">
+            <div class="info-overlay">
+              <h5 class="mb-1">Modern Family Home</h5>
+              <p class="mb-0">4 beds • 3 baths • $1,200,000</p>
+              <small>Sheikh Zayed City, Giza</small>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6 col-lg-4 animate-on-scroll">
+          <div class="property-wrapper">
+            <img class="property-img" src="https://wallpapersok.com/images/high/luxurious-mansion-surrounded-by-lush-palm-trees-5692l6vwcj1hmc5k.webp" alt="Elegant Penthouse with Terrace">
+            <div class="info-overlay">
+              <h5 class="mb-1">Elegant Penthouse with Terrace</h5>
+              <p class="mb-0">4 beds • 3 baths • $1,500,000</p>
+              <small>Maadi, Cairo</small>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6 col-lg-4 animate-on-scroll">
+          <div class="property-wrapper">
+            <img class="property-img" src="https://wallpapersok.com/images/high/shifa-manor-hotel-mansion-733yk9twcwr1mjqh.webp" alt="Exclusive Resort Residence">
+            <div class="info-overlay">
+              <h5 class="mb-1">Exclusive Resort Residence</h5>
+              <p class="mb-0">2 beds • 2 baths • $700,000</p>
+              <small>El Gouna, Red Sea</small>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6 col-lg-4 animate-on-scroll">
+          <div class="property-wrapper">
+            <img class="property-img" src="https://wallpapersok.com/images/high/majestic-estate-in-greenwich-ct-3e4rdmjxc1j9ykwb.webp" alt="Luxury Residential Plot">
+            <div class="info-overlay">
+              <h5 class="mb-1">Luxury Residential Plot</h5>
+              <p class="mb-0">Build your dream home • $500,000</p>
+              <small>New Administrative Capital</small>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="agents" class="py-5 bg-light">
+    <div class="container">
+      <div class="text-center mb-5 animate-on-scroll">
+        <h2 class="fw-bold display-4 text-primary">Meet Our Expert Team</h2>
+        <p class="text-muted lead">Dedicated professionals at your service, committed to finding your perfect property.</p>
+      </div>
+      <div class="row g-4">
+        <div class="col-md-6 col-lg-3 text-center animate-on-scroll">
+          <div class="card agent-card">
+            <img class="rounded-circle mx-auto" src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Sarah Johnson">
+            <h5>Sarah Johnson</h5>
+            <p class="text-muted mb-1">Senior Realtor</p>
+            <a href="mailto:sarah@primeestates.com">sarah@primeestates.com</a>
+          </div>
+        </div>
+        <div class="col-md-6 col-lg-3 text-center animate-on-scroll">
+          <div class="card agent-card">
+            <img class="rounded-circle mx-auto" src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?q=80&w=2880&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Michael Lee">
+            <h5>Michael Lee</h5>
+            <p class="text-muted mb-1">Property Consultant</p>
+            <a href="mailto:michael@primeestates.com">michael@primeestates.com</a>
+          </div>
+        </div>
+        <div class="col-md-6 col-lg-3 text-center animate-on-scroll">
+          <div class="card agent-card">
+            <img class="rounded-circle mx-auto" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=2864&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Emily Davis">
+            <h5>Emily Davis</h5>
+            <p class="text-muted mb-1">Investment Specialist</p>
+            <a href="mailto:emily@primeestates.com">emily@primeestates.com</a>
+          </div>
+        </div>
+        <div class="col-md-6 col-lg-3 text-center animate-on-scroll">
+          <div class="card agent-card">
+            <img class="rounded-circle mx-auto" src="https://images.unsplash.com/photo-1534030347209-467a5b0ad3e6?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="David Chen">
+            <h5>David Chen</h5>
+            <p class="text-muted mb-1">Luxury Property Advisor</p>
+            <a href="mailto:david@primeestates.com">david@primeestates.com</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="cta">
+    <div class="content container animate-on-scroll">
+      <h2 class="display-5 fw-bold">Ready to Find Your Perfect Home?</h2>
+      <p class="lead mb-4">Contact us today for a personalized consultation and exclusive tours.</p>
+      <a href="#contactForm" class="btn btn-lg btn-warning">Get in Touch</a>
+    </div>
+  </section>
+
+  <footer>
+    <div class="container text-center">
+      <p>&copy; 2025 Prime Estates. All rights reserved.</p>
+      <p>
+        <a href="#property-types">Property Types</a> |
+        <a href="#properties">Properties</a> |
+        <a href="#agents">Agents</a> |
+        <a href="#cta">Contact</a>
+      </p>
+    </div>
+  </footer>
+
+  <script
+    src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
+  ></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      // Navbar scroll effect
+      const navbar = document.querySelector('.navbar');
+      window.addEventListener('scroll', () => {
+        if (window.scrollY > 50) {
+          navbar.classList.add('scrolled');
+        } else {
+          navbar.classList.remove('scrolled');
+        }
+      });
+
+      // Scroll animations
+      const observer = new IntersectionObserver(entries => {
+        entries.forEach(e => {
+          if (e.isIntersecting) {
+            e.target.classList.add('visible');
+            // Stop observing once visible to prevent re-triggering
+            observer.unobserve(e.target);
+          }
+        });
+      }, { threshold: 0.2 }); // Trigger when 20% of the element is visible
+      document.querySelectorAll('.animate-on-scroll').forEach(el => observer.observe(el));
+    });
+  </script>
+</body>
+</html>
